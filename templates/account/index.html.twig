@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte e-commerce{% endblock %}
+
+{% block content %}
+    <h1>Mon compte</h1>
+    Bienvenue {{app.user.firstname}}! <br> 
+    C'est dans cette espace que vous gérerez vos informations personnnelles
+    <hr>
+    -<a href=" {{path('app_acount_password')}}"> Modifier mon mot de passe <br></a>
+    -Ajouter mes adresse <br>
+    -Mes commandes <br>
+{% endblock %}
