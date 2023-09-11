@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 class AcountPasswordController extends AbstractController
 {
@@ -19,10 +20,10 @@ class AcountPasswordController extends AbstractController
     }
 
     #[Route('/compte/modification-de-mot-de-passe', name: 'app_acount_password')]
-    public function index(Request $request , UserPasswordHasherInterface $hasher): Response
+    public function index(Request $request , UserPasswordHasherInterface $hasher, DecoderInterface $decoder): Response
     {
 
-        
+        $notification= null;
         $user= $this->getUser();
         $form= $this->createForm( ChangePasswordType::class, $user);
 
@@ -37,15 +38,17 @@ class AcountPasswordController extends AbstractController
                 $password=$hasher->hashPassword($user, $new_pwd);
 
                 $user->setPassword($password);
-                $this->entityManager->persist($user);
                 $this->entityManager->flush();
+                $notification=" Votre mot de passe à bien été mise à jour";
+            }else{
+                $notification ="Erreur de modification veuillez réessayer";
             }
 
         }
 
         return $this->render('account/password.html.twig', [
-            'form' => $form->createView()
-
+            'form' => $form->createView(),
+            'notification' => $notification
 
         ]);
     }
