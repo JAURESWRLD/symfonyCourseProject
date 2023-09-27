@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier e-commerce{% endblock %}
+
+{% block content %}
+<h1>Mon panier</h1>
+Ensemble de vos produits ajouté à votre panier
+{% if cart|length > 0 %}
+<div class="container mt-5">
+        <table class="table text-center">
+            <thead class="bg-light">
+                <tr>
+                    <th scope= "col">Produit</th>
+                    <th scope= "col"></th>
+                    <th scope= "col">Quantité</th>
+                    <th scope= "col">Prix</th>
+                    <th scope= "col">Total</th>
+                    <th scope= "col"></th>
+                </tr>
+            </thead>
+            {% set total = null %}
+            {% for product in cart %}
+            <tbody>
+                <tr>
+                    <th>
+                        <img src="/uploads/{{product.product.illustration}}" alt="{{product.product.name}}" height="75px"><br>
+                    </th>
+                    <td>
+                        {{product.product.name}}<br>
+                        <small>{{product.product.subtitle}}</small>
+                    </td>
+                    <td>
+                        <a href="{{path('decrease_to_cart', {id: product.product.id}) }}"><i class="fa-thin fa-minus" style="color: #000000;"></i></a>
+                        {{product.quantity}}
+                        <a href="{{path('add_to_cart', {id: product.product.id}) }}"><i class="fa-thin fa-plus" style="color: #000000;"></i></a>
+                    </td>
+                    <td>{{(product.product.price /100)|number_format(2, ',','.' )}}€</td>
+                    <td>{{((product.product.price *product.quantity)/100)|number_format(2, ',','.' )}}€</td>
+                    <td><a href=" {{path('delete_to_cart', {id: product.product.id}) }}"  ><i class="fa-duotone fa-circle-trash fa-2xl" style="--fa-primary-color: #ff1f1f; --fa-secondary-color: #ef2525;"></i></a></td>
+                </tr>
+            </tbody>
+            {% set total = total+ (product.product.price *product.quantity) %}
+            {% endfor %}
+             
+        </table>
+        <div class="text-right">
+            <b>Nombre de produit :</b> {{cart|length}} <br>
+            <b>Prix total du Panier:</b> {{(total/100)|number_format(2, ',','.' )}}€ <br><br>
+            <a class="btn btn-info btn-block mb-5">Passer la Commande</a>  
+        </div>
+    </div>
+    {% else %}
+        <hr>
+        <p><b><h4>Aucun produit dans votre panier</h4></b><br></p>
+    {% endif %}
+{% endblock %}
